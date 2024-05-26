@@ -1,6 +1,5 @@
 {	"name":"PointUtility",
-	"version":1.1,
-	"date":"10 Apr 2024",
-	"new":"Improves parsing of clipboard and adds version checking",
-	"comment": "Don't forget to set same version number in the script too!"
+	"version":0.1,
+	"date":"26 May 2024",
+	"new":""
 }
