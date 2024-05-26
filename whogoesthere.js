@@ -201,7 +201,7 @@ function checkForUpdates(){
 	if (choice == 3) return;
 	check = require("https://raw.githubusercontent.com/antipole2/JavaScript_pi/master/onlineIncludes/checkForUpdates.js");
 	check(scriptVersion, days = 5,
-		"https://raw.githubusercontent.com/antipole2/WhoGesThere/main/whogesthere.js",	// url of script
-		"https://raw.githubusercontent.com/antipole2/WhoGesThere/main/whogesthere.JSON"// url of version JSON
+		"https://raw.githubusercontent.com/antipole2/WhoGoesThere/main/whogoesthere.js",	// url of script
+		"https://raw.githubusercontent.com/antipole2/WhoGoesThere/main/version.JSON"// url of version JSON
 		);
 	}
