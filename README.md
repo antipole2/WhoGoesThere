@@ -1,10 +1,10 @@
-# PointUtility
+# WhoGoesThere
  
 The Connections tab of the Settings panel includes the option to display NMEA traffic.
-This is useful but can be. difficult to use.  Data rushes by.
+This is useful but can be difficult to use.  Data rushes by.
 You can pause this stream but then only see a small snapshot of what is happening.
 
-The WhoGoesThere JavaScript provides a more useable insight.
+The _WhoGoesThere_ JavaScript provides more useable insights.
 
 It starts by listing the active connections as seen through the plugins API.
 
@@ -20,7 +20,7 @@ It displays one sample of each type of NMEA0183 sentence, prefaced by the count 
 
 ## NMEA2000 devices
 
-If you have a NMEA2000 connection, the script will have sent PGN59904 to all stations requesting them to send PGN126996.
+If you have an NMEA2000 connection, the script will have sent PGN59904 to all stations, requesting them to send PGN126996.
 The responses are displayed.
 
 This reveals which devices are on the network and at which address.
@@ -33,11 +33,11 @@ Using the earlier table, you can see which device is sending which PGN.
 
 The script includes the statement
 
-```NMEA2000Decode = false```
+```var NMEA2000Decode = false;```
 
 If this is changed to
 
-```NMEA2000Decode = true```
+```var NMEA2000Decode = true;```
 
 then the script will also decode the samples and display them as JSON. 
 
@@ -45,7 +45,7 @@ then the script will also decode the samples and display them as JSON.
 
 This script needs JavaScript plugin v3.0.4 or later.
 
-1. Copy this URL to your clipboard (copy link - do not follow it) `https://raw.githubusercontent.com/antipole2/WhoGesThere/main/whogesthere.js`
+1. Copy this URL to your clipboard (copy the link - do not follow it) `https://raw.githubusercontent.com/antipole2/WhoGoesThere/main/whogoesthere.js`
 2. In a JavaScript console choose `Load` and then `URL on clipboard`.  The script should be loaded into the script pane.
 3. Choose `Run` to start the script.
 
@@ -57,9 +57,6 @@ Alternatively, you can fork the repository if you want to evolve the script.
 
 The script has an experimental arrangement for advising of and obtaining updates.
 
-Issues can be reported [here]().
+The script can be discussed in the Discussion forum above.
 
-The script can be discussed [here]().
-## Discussions
-
-To discuss this script's functionality, use the Discussions button above.
+Issues can be reported using the Issues tab.
