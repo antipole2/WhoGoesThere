@@ -196,11 +196,19 @@ function padEnd(text, upto){	// pad with trailing spaces
 	}
 
 function checkForUpdates(){
+	checkDays = 5;
+	if (_remember == undefined) _remember = {versionControl:{lastCheck:0}};
+	now = Date.now();
+	if (_remember.hasOwnProperty("versionControl")){
+		lastCheck = _remember.versionControl.lastCheck;
+		nextCheck = lastCheck + checkDays*24*60*60*1000;
+		if (now < nextCheck) return;
+		}
 	if (!OCPNisOnline()) return;
 	choice = messageBox("Are you truely on-line to the internet?", "YesNo", "checkVersion");
 	if (choice == 3) return;
 	check = require("https://raw.githubusercontent.com/antipole2/JavaScript_pi/master/onlineIncludes/checkForUpdates.js");
-	check(scriptVersion, days = 5,
+	check(scriptVersion, CheckDays = 5,
 		"https://raw.githubusercontent.com/antipole2/WhoGoesThere/main/whogoesthere.js",	// url of script
 		"https://raw.githubusercontent.com/antipole2/WhoGoesThere/main/version.JSON"// url of version JSON
 		);
