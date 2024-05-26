@@ -3,6 +3,9 @@ var NMEA2000Decode = false;
 scriptName = "WhoGoesThere";
 consoleName(scriptName);
 
+scriptVersion = 0.1;
+checkForUpdates();
+
 var payloads = [];
 
 var descriptors;
@@ -135,16 +138,17 @@ function listNMEA2000(){
 		return;
 		}
 	for (var k = 0; k < keys.length; k++){
-		var decoded;
+		var decodeOK;
 		decoder = new NMEA2000(keys[k]*1);
 		payload = NMEA2000buffer[keys[k]];
 		try {
 			decoded = decoder.decode(payload); // replace payload with object
+			decodeOK = true;
 			print(NMEA2000Counts[keys[k]], "\t\t", payload[7], "\t\t", keys[k], "\t", decoded.descriptor.Description, "\n");
 			}
 		catch(err){
 			// decode failed - look it up the hard way
-			decoded = "Decode not available";
+			decodeOK = false;
 			pgn = keys[k];
 			description = "No description found";
 			for (var d = 0; d < descriptors.length; d++){
@@ -153,11 +157,13 @@ function listNMEA2000(){
 					break;
 					}
 				}
-			print(NMEA2000Counts[keys[k]], "\t\t", payload[7], "\t\t", keys[k], "\t", description "\n");
+			print(NMEA2000Counts[keys[k]], "\t\t", payload[7], "\t\t", keys[k], "\t", description);
 //			printBlue(payload, "\n");
-			continue;
 			}
-		if (NMEA2000Decode) print(JSON.stringify(decoded, null, "\t"), "\n");
+		if (NMEA2000Decode) {
+			if (decodeOK) print(JSON.stringify(decoded, null, "\t"), "\n");
+			else print(" - decoding not available\n");
+			}
 		}
 	}
 
