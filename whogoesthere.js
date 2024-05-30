@@ -1,5 +1,6 @@
 listen = 10;	// seconds to listen for
-var NMEA2000Decode = false;
+var NMEA2000Decode = false;	// decode message
+var skDump = false;			// dump full SignalK
 scriptName = "WhoGoesThere";
 consoleName(scriptName);
 
