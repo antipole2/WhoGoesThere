@@ -3,10 +3,15 @@ var NMEA2000Decode = false;
 scriptName = "WhoGoesThere";
 consoleName(scriptName);
 
-scriptVersion = 0.1;
+scriptVersion = 0.2;
 checkForUpdates();
 
-var payloads = [];
+// buffers to store inputs
+var NMEA0183buffer = {};
+var NMEA0183Counts = {};
+var skBuffer = {};
+var skCounts = {};
+var payloads = [];	// NMEA2000
 
 var descriptors;
 var NMEA2000handles = [];		// the NMEA2000 connection handles, if any
@@ -35,11 +40,12 @@ if (haveNMEA2000){
 	}
 else print("No NMEA2000 connection\n");
 
-responses = 0;
-payloads = [];	
+NMEA2000responses = 0;
+//payloads = [];	
 
 print("\nListening for ", listen, " seconds");
 OCPNonAllNMEA0183(logNMEA0183);
+OCPNonMessageName(logSignalK, "OCPN_CORE_SIGNALK");
 onAllSeconds(tick, 1);
 onSeconds(report, listen);
 
@@ -47,10 +53,12 @@ function report(){
 	timeAlloc(2000);
 	onSeconds();	// cancel all timers and listeners
 	OCPNonNMEA0183();
+	OCPNonMessageName();
 	OCPNonNMEA2000();
 	print("\n\n");
 	listMessageNames();
 	listNMEA0183();
+	listSignalK();
 	if (haveNMEA2000){
 		list126996();
 		listNMEA2000();
@@ -96,9 +104,6 @@ function listMessageNames(){
 	print(OCPNgetMessageNames());
 	}
 
-NMEA0183buffer = {};
-NMEA0183Counts = {};
-
 function logNMEA0183(input){
 	if (input.OK){
 		sentence = input.value;
@@ -112,7 +117,6 @@ function logNMEA0183(input){
 function listNMEA0183(){
 	OCPNonNMEA0183();
 	printUnderlined("\nNMEA0183 samples\n");
-	printBlue("Counts\tSentence\n");
 	const keys = Object.keys(NMEA0183buffer);
 	if (keys.length < 1){
 		print("(None)\n");
@@ -125,18 +129,57 @@ function listNMEA0183(){
 		if (a.slice(1,3) < b.slice(1,3)) return -11;
 		return 0;
 		});
-	for (var k = 0; k < keys.length; k++)	print(NMEA0183Counts[keys[k]], "\t\t", NMEA0183buffer[keys[k]], "\n");
+	printBlue("Counts\tSentence\n");
+	for (var k = 0; k < keys.length; k++)	print(padNumber(NMEA0183Counts[keys[k]]), "\t\t", NMEA0183buffer[keys[k]], "\n");
+	delete NMEA0183buffer;	// release the space
+	delete NMEA0183Counts;
 	}
+
+function logSignalK(data){
+	parsed = JSON.parse(data);
+	if (typeof parsed.updates != "undefined"){
+		source = parsed.updates[0].source;
+		// create a simplified key from source		
+		key = JSON.stringify(source).replace(/[.,: {}\-"]/g, "");
+		skBuffer[key] = parsed;
+		if (typeof skCounts[key] == "undefined") skCounts[key] = 1;
+		else skCounts[key]++;
+		}
+	OCPNonMessageName(logSignalK, "OCPN_CORE_SIGNALK");
+	}
+
+function listSignalK(){
+	printUnderlined("\nSignalK samples","\n");
+	const keys = Object.keys(skBuffer);
+	keys = keys.sort();
+	if (keys.length < 1){
+		print("(None)\n");
+		return;
+		}
+	printBlue("Counts\tSource\tData\n");
+	for (var k = 0; k < keys.length; k++){
+		thisOne = skBuffer[keys[k]];
+		print(padNumber(skCounts[keys[k]]), "\t\t", thisOne.updates[0].source, "\n\t\t\t\t", thisOne.updates[0].values, "\n");
+		if (skDump){
+			printBlue(JSON.stringify(thisOne,null, "\t"), "\n");
+			}
+	//	print("\n");
+		}
+	delete skBuffer;
+	delete skCounts;
+	}
+
 
 function listNMEA2000(){
 	OCPNonNMEA2000();
 	printUnderlined("\nNMEA2000 samples\n");
-	printBlue("Counts\tSource\tPGN\n");
 	const keys = Object.keys(NMEA2000buffer);
 	if (keys.length < 1){
 		print("(None)\n");
 		return;
 		}
+	timeAlloc(2000);
+	printBlue("Counts\tSource\tPGN\n");
 	for (var k = 0; k < keys.length; k++){
 		var decodeOK;
 		decoder = new NMEA2000(keys[k]*1);
@@ -144,7 +187,7 @@ function listNMEA2000(){
 		try {
 			decoded = decoder.decode(payload); // replace payload with object
 			decodeOK = true;
-			print(NMEA2000Counts[keys[k]], "\t\t", payload[7], "\t\t", keys[k], "\t", decoded.descriptor.Description, "\n");
+			print(padNumber(NMEA2000Counts[keys[k]]), "\t\t", payload[7], "\t\t", keys[k], "\t", decoded.descriptor.Description, "\n");
 			}
 		catch(err){
 			// decode failed - look it up the hard way
@@ -157,7 +200,7 @@ function listNMEA2000(){
 					break;
 					}
 				}
-			print(NMEA2000Counts[keys[k]], "\t\t", payload[7], "\t\t", keys[k], "\t", description);
+			print(padNumber(NMEA2000Counts[keys[k]]), "\t\t", payload[7], "\t\t", keys[k], "\t", description, "\n");
 //			printBlue(payload, "\n");
 			}
 		if (NMEA2000Decode) {
@@ -165,6 +208,8 @@ function listNMEA2000(){
 			else print(" - decoding not available\n");
 			}
 		}
+	delete NMEA2000buffer;	// release the space
+	delete NMEA2000Counts;
 	}
 
 function receive126996(payload){
@@ -187,7 +232,12 @@ function list126996(){
 			print(padEnd(n2k.origin,6), " ", padEnd(n2k.productCode,10), " ", padEnd(n2k.modelId, 26), " ", padEnd(n2k.softwareVersionCode,20), " ", padEnd(n2k.modelSerialCode, 16), " ", padEnd(n2k.certificationLevel,14), " ", n2k.loadEquivalency, "\n");
 			}
 		}
-	else print("\nNo NMEA2000 126996( responses\n");
+	else print("\nNo NMEA2000 126996 responses\n");
+	}
+
+function padNumber(x){	//pad number x with leading spaces
+	x = "     " + x;
+	return x.slice(-5);
 	}
 
 function padEnd(text, upto){	// pad with trailing spaces
