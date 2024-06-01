@@ -18,6 +18,21 @@ It displays a list of the OpenCPN messagaes received since the plugin was starte
 
 It displays one sample of each type of NMEA0183 sentence, prefaced by the count of that sentence type.
 
+## SignalK Data
+
+It displays one sample of each source of SignalK updates, prefaced by the count of that source.
+
+The script includes the statement
+
+```var skDump = false;			// dump full SignalK```
+
+If this is changed to `true`, the samples will be displayed in full as JSON.
+
+### Note regarding NMEA2000 data sent via SignalK
+
+NMEA2000 uses the maximum value of a variable to indicate data not available. (maximum value - 1 indicates error and maximum value -2 is reserved).
+When received over SignalK, these large values are shown as numbers rather than 'undefined' or 'error'.
+
 ## NMEA2000 devices
 
 If you have an NMEA2000 connection, the script will have sent PGN59904 to all stations, requesting them to send PGN126996.

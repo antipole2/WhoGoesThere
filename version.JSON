@@ -1,5 +1,5 @@
 {	"name":"PointUtility",
-	"version":0.1,
-	"date":"26 May 2024",
-	"new":""
+	"version":0.2,
+	"date":"01 Jun 2024",
+	"new":"Listens for SignalK and lists samples"
 }
