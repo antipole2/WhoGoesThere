@@ -1,5 +1,6 @@
-{	"name":"PointUtility",
+{	"name":"WhoGoesThere",
 	"version":0.2,
 	"date":"01 Jun 2024",
+	"script": "https://raw.githubusercontent.com/antipole2/WhoGoesThere/main/whogoesthere.js",
 	"new":"Listens for SignalK and lists samples"
 }
