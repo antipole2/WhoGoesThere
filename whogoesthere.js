@@ -3,8 +3,8 @@ var NMEA2000Decode = false;
 scriptName = "WhoGoesThere";
 consoleName(scriptName);
 
-scriptVersion = 0.1;
-checkForUpdates();
+scriptVersion = 1.0;
+require("checkForUpdate")(scriptName, scriptVersion, 5, "https://raw.githubusercontent.com/antipole2/WhoGoesThere/main/version.JSON");
 
 var payloads = [];
 
@@ -187,29 +187,10 @@ function list126996(){
 			print(padEnd(n2k.origin,6), " ", padEnd(n2k.productCode,10), " ", padEnd(n2k.modelId, 26), " ", padEnd(n2k.softwareVersionCode,20), " ", padEnd(n2k.modelSerialCode, 16), " ", padEnd(n2k.certificationLevel,14), " ", n2k.loadEquivalency, "\n");
 			}
 		}
-	else print("\nNo NMEA2000 126996( responses\n");
+	else print("\nNo NMEA2000 126996 responses\n");
 	}
 
 function padEnd(text, upto){	// pad with trailing spaces
 	text += "                               ";
 	return text.slice(0, upto);
-	}
-
-function checkForUpdates(){
-	checkDays = 5;
-	if (_remember == undefined) _remember = {versionControl:{lastCheck:0}};
-	now = Date.now();
-	if (_remember.hasOwnProperty("versionControl")){
-		lastCheck = _remember.versionControl.lastCheck;
-		nextCheck = lastCheck + checkDays*24*60*60*1000;
-		if (now < nextCheck) return;
-		}
-	if (!OCPNisOnline()) return;
-	choice = messageBox("Are you truely on-line to the internet?", "YesNo", "checkVersion");
-	if (choice == 3) return;
-	check = require("https://raw.githubusercontent.com/antipole2/JavaScript_pi/master/onlineIncludes/checkForUpdates.js");
-	check(scriptVersion, CheckDays = 5,
-		"https://raw.githubusercontent.com/antipole2/WhoGoesThere/main/whogoesthere.js",	// url of script
-		"https://raw.githubusercontent.com/antipole2/WhoGoesThere/main/version.JSON"// url of version JSON
-		);
 	}
