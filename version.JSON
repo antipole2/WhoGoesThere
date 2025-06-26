@@ -2,6 +2,6 @@
 	"version":1.0,
 	"date":"17 Feb 2025",
 	"script": "https://raw.githubusercontent.com/antipole2/WhoGoesThere/main/whogoesthere.js",
-	"pluginVersion": 3.1.1,
+	"pluginVersion": "3.1.1",
 	"new":"Incorporates built-in update checking"
 }
