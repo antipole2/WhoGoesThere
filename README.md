@@ -1,6 +1,6 @@
 # WhoGoesThere
  
-The Data Monitor in the Tools menu akkows you to display NMEA traffic.
+The Data Monitor in the Tools menu allows you to display NMEA traffic.
 This is useful but can be difficult to use.  Data rushes by.
 You can pause this stream but then only see a small snapshot of what is happening.
 
