@@ -1,7 +1,7 @@
 {	"name":"WhoGoesThere",
-	"version":1.0,
-	"date":"17 Feb 2025",
+	"version":1.1,
+	"date":"21 Aug 2026",
 	"script": "https://raw.githubusercontent.com/antipole2/WhoGoesThere/main/whogoesthere.js",
 	"pluginVersion": 3.1.1,
-	"new":"Incorporates built-in update checking"
+	"new":"Avoids listening for same PGN multiple times if multiple definitions; gains tracing option"
 }
