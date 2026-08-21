@@ -1,6 +1,6 @@
 # WhoGoesThere
  
-The Connections tab of the Settings panel includes the option to display NMEA traffic.
+The Data Monitor in the Tools menu allows you to display NMEA traffic.
 This is useful but can be difficult to use.  Data rushes by.
 You can pause this stream but then only see a small snapshot of what is happening.
 
